@@ -25,6 +25,7 @@ public class GameEngine {
             TicTacToe board1 = (TicTacToe) board;
             String firstCharacter = "";
 
+            //Row Complete
             boolean rowComplete = true;
             for(int i=0; i<3; i++){ //All Rows
                 firstCharacter = board1.getCell(i,0);
@@ -44,9 +45,11 @@ public class GameEngine {
                 return new GameResult(true, firstCharacter);
             }
 
-            boolean colComplete = firstCharacter != null;
+            //Column Complete
+            boolean colComplete = true;
             for(int i=0; i<3; i++){ //All Columns
                 firstCharacter = board1.getCell(0,i);
+                colComplete = firstCharacter != null;
                     for(int j=1; j<3; j++){
                         if(firstCharacter != null && !firstCharacter.equals(board1.getCell(j,i))){
                             colComplete = false;
@@ -62,8 +65,9 @@ public class GameEngine {
                 return new GameResult(true, firstCharacter);
             }
 
-            boolean diaComplete = firstCharacter != null;
+            //Diagonal Complete
             firstCharacter = board1.getCell(0,0);
+            boolean diaComplete = firstCharacter != null;
             for(int i=0; i<3; i++){ //i = j Diagonal
                     if(firstCharacter != null && !firstCharacter.equals(board1.getCell(i,i))){
                         diaComplete = false;
@@ -75,8 +79,9 @@ public class GameEngine {
                 return new GameResult(true, firstCharacter);
             }
 
-            boolean revDiaComplete = firstCharacter != null;
+            //Reverse Diagonal Complete
             firstCharacter = board1.getCell(0,2);
+            boolean revDiaComplete = firstCharacter != null;
             for(int i=0; i<3; i++){ //i+j = constance Diagonal (Reverse Diagonal)
                     if(firstCharacter != null && !firstCharacter.equals(board1.getCell(i, 2 - i))){ // 0 + i + 2 - i = 2 (constant)
                         revDiaComplete = false;
@@ -99,12 +104,12 @@ public class GameEngine {
             }
 
             if(countOfFilledCells == 9){
-                return new GameResult(true , "");
+                return new GameResult(true , "-");
             }else{
-                return new GameResult(false, "");
+                return new GameResult(false, "-");
             }
         }else{
-            return new GameResult(false, "");
+            return new GameResult(false, "-");
         }
     }
     public Move suggestMove(Player computer , Board board){
@@ -112,7 +117,7 @@ public class GameEngine {
             TicTacToe board1 = (TicTacToe) board;
             for(int i=0; i<3; i++){
                 for(int j=0; j<3; j++){
-                    if(board1.getCell(j,i) == null){
+                    if(board1.getCell(i,j) == null){
                         return new Move(new Cell(i,j));
                     }
                 }

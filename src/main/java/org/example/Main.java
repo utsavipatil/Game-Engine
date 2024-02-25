@@ -13,23 +13,26 @@ public class Main {
         GameEngine gameEngine = new GameEngine();
         Board board = gameEngine.start("TicTacToe");
         System.out.println("Game started");
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        int row, col;
         //Make moves in a loop
 //
         while (!gameEngine.isComplete(board).isOver()){
+            Player computer = new Player("0"), human = new Player("X");
             System.out.println("Make your move!");
-            int row = sc.nextInt(), col = sc.nextInt();
-            Player computer = new Player("0"), opponent = new Player("X");
-            Move oppMove = new Move(new Cell(row, col));
-            gameEngine.move(board, opponent , oppMove);
-            Move computerMove = gameEngine.suggestMove(computer, board);
-            gameEngine.move(board, computer, computerMove);
+            System.out.println(board);
+            row = scanner.nextInt();
+            col = scanner.nextInt();
+            Move oppMove = new Move(new Cell(row , col));
+            gameEngine.move(board,human,oppMove);
             if(!gameEngine.isComplete(board).isOver()){
-                gameEngine.move(board, computer, computerMove);
+                Move computerMove = gameEngine.suggestMove(computer,board);
+                gameEngine.move(board,computer,computerMove);
             }
         }
 
-        System.out.println("GameResult: " + gameEngine.isComplete(board));
+        System.out.println("GameResult: Congratulations winner is  " + gameEngine.isComplete(board).getWinner() + " !!!!");
+        System.out.println(board);
     }
 }
 
