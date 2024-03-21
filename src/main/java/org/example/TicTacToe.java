@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.gamestate.Board;
 import org.example.gamestate.Cell;
+import org.example.gamestate.Move;
 
 public class TicTacToe extends Board {
     String cells[][] = new String[3][3];
@@ -29,5 +30,10 @@ public class TicTacToe extends Board {
             result += "\n";
         }
         return result;
+    }
+
+    @Override
+    public void move(Move move){
+        setCell(move.getCell(), move.getPlayer().symbol());
     }
 }
