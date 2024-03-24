@@ -30,8 +30,8 @@ public class Main {
             Move oppMove = new Move(new Cell(row , col), human);
             gameEngine.move(board,oppMove);
             if(!ruleEngine.getState(board).isOver()){
-                Move computerMove = aiEngine.suggestMove(computer,board);
-                gameEngine.move(board,computerMove);
+                Move secondPlayerMove = aiEngine.suggestMove(computer,board);
+                gameEngine.move(board,secondPlayerMove);
             }
         }
 
