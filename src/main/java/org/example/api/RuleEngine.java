@@ -1,85 +1,71 @@
 //Responsibility = Making sure that all rules are followed in the game
+//Rubber Duck Debugging theory is commonly used by programmers. The idea is that when a programmer needs to debug their code, they should explain the program line-by-line to
+//a rubber duck. Often, the act of explaining the problem step by step will cause the solution to present itself.
+
 
 package org.example.api;
 
 import org.example.TicTacToe;
 import org.example.gamestate.Board;
 import org.example.gamestate.GameState;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class RuleEngine {
+    private boolean isStreak;
+    private String firstCharacter;
+    private GameState rowWin;
+
     public GameState getState(Board board){
         if(board instanceof TicTacToe){
             TicTacToe board1 = (TicTacToe) board;
-            String firstCharacter = "";
+            Function<Integer, String > getRow = i -> board1.getSymbol(i,0); //Function that take Integer argument and return String
+            Function<Integer, String > getCol = i -> board1.getSymbol(0,i); //Lambada expression is a short block of code which takes in parameters and return value
+
+            BiFunction<Integer,Integer,String > next = (i, j) -> board1.getSymbol(i,j);
+            BiFunction<Integer,Integer, String > getNextCol = (i,j) -> board1.getSymbol(j,i);
 
             //Row Complete
-            boolean rowComplete = true;
-            for(int i=0; i<3; i++){ //All Rows
-                firstCharacter = board1.getCell(i,0);
-                rowComplete = firstCharacter != null;
-                for(int j=1; j<3; j++){
-                    if(firstCharacter != null && !firstCharacter.equals(board1.getCell(i,j))){ //If first character is not null
-                        rowComplete = false;
-                        break;
-                    }
-                }
-                if(rowComplete){
-                    break;
-                }
-            }
-
-            if(rowComplete){
-                return new GameState(true, firstCharacter);
-            }
+            Function<Integer,String> startsWith = getRow;
+            GameState rowWin = outerTraversal((i,j) -> board1.getSymbol(i,j));
+            if(rowWin.isOver()) return rowWin;
 
             //Column Complete
-            boolean colComplete = true;
-            for(int i=0; i<3; i++){ //All Columns
-                firstCharacter = board1.getCell(0,i);
-                colComplete = firstCharacter != null;
-                for(int j=1; j<3; j++){
-                    if(firstCharacter != null && !firstCharacter.equals(board1.getCell(j,i))){
-                        colComplete = false;
-                        break;
-                    }
-                }
-                if(colComplete){
-                    break;
-                }
-            }
-
-            if(colComplete){
-                return new GameState(true, firstCharacter);
-            }
+            GameState colWin = outerTraversal((i,j) -> board1.getSymbol(j,i));
+            if(colWin.isOver()) return colWin;
 
             //Diagonal Complete
-            firstCharacter = board1.getCell(0,0);
-            boolean diaComplete = firstCharacter != null;
-            for(int i=0; i<3; i++){ //i = j Diagonal
-                if(firstCharacter != null && !firstCharacter.equals(board1.getCell(i,i))){
-                    diaComplete = false;
-                    break;
-                }
-            }
-
-            if(diaComplete){
-                return new GameState(true, firstCharacter);
-            }
+            GameState diagWin = findDiagStreak(i1 -> board1.getSymbol(i1, i1));
+            if(diagWin.isOver()) return diagWin;
 
             //Reverse Diagonal Complete
-            firstCharacter = board1.getCell(0,2);
-            boolean revDiaComplete = firstCharacter != null;
-            for(int i=0; i<3; i++){ //i+j = constance Diagonal (Reverse Diagonal)
-                if(firstCharacter != null && !firstCharacter.equals(board1.getCell(i, 2 - i))){ // 0 + i + 2 - i = 2 (constant)
-                    revDiaComplete = false;
+            GameState revDiagWin = findDiagStreak(i1 -> board1.getSymbol(i1, 2-i1));
+            if(revDiagWin.isOver()) return revDiagWin;
+
+
+            Function<Integer, String> diag = i -> board1.getSymbol(i,i);
+            Function<Integer, String> revDia = i -> board1.getSymbol(i, 2 - i);
+
+            firstCharacter = diag.apply(0);
+            diagWin = findDiagStreak(diag);
+            if(diagWin != null) return  diagWin;
+
+            boolean isStreak;
+
+            isStreak = firstCharacter != null;
+            for(int i=1; i<3; i++){ //i = j Diagonal
+                if(firstCharacter != null && !firstCharacter.equals(diag.apply(i))){
+                    isStreak = false;
                     break;
                 }
-
             }
-
-            if(revDiaComplete){
+            if(isStreak){
                 return new GameState(true, firstCharacter);
             }
+
+
+            revDiagWin = findDiagStreak(revDia);
+            if(revDiagWin != null) return revDiagWin;
 
             int countOfFilledCells = 0;
             for(int i=0; i<3; i++){
@@ -98,5 +84,39 @@ public class RuleEngine {
         }else{
             return new GameState(false, "-");
         }
+    }
+
+    private GameState outerTraversal(BiFunction<Integer,Integer,String> next){
+        //Iterator in Java is an Object used to traverse and access elements sequentially in a collection
+
+        GameState result = new GameState(false, "-");
+        for(int i=0; i<3; i++){ //All Rows
+            final int ii = i;
+            GameState traversal1 = traverse(j -> next.apply(ii,j));
+            if(traversal1.isOver()){
+                result = traversal1;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private GameState findDiagStreak(Function<Integer, String> traversal){
+        return traverse(traversal);
+    }
+
+    private static GameState traverse(Function<Integer, String> traversal){
+        GameState result = new GameState(false, "-");
+        boolean possibleStreak = true;
+        for(int j=0; j<3; j++){
+            if(traversal.apply(j) == null || !traversal.apply(0).equals(traversal.apply(j))){
+                possibleStreak = false;
+                break;
+            }
+        }
+        if(possibleStreak){
+            result = new GameState(true, traversal.apply(0));
+        }
+        return result;
     }
 }
