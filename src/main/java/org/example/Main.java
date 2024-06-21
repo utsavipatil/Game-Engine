@@ -20,10 +20,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int row, col;
         //Make moves in a loop
-//
+
         while (!ruleEngine.getState(board).isOver()){
             Player computer = new Player("0"), human = new Player("X");
-            System.out.println("Make your move!");
+            System.out.println("Make your move (Add row col for move)!");
             System.out.println(board);
             row = scanner.nextInt();
             col = scanner.nextInt();

@@ -1,4 +1,8 @@
 //Responsibility = Any changes in the Board
+/*"Fork" means when a state where someone is going to win no matter what
+* Problem 1 = Writing the logic for detection of forking should not be in the GameState class because GameState class is responsible for state of the game at any given point in of time
+* Problem 2 = Adding more logic to getState() in Rule Engine makes the method fatter and more complicated
+*  */
 
 package org.example.api;
 
