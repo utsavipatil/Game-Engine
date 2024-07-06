@@ -17,10 +17,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+/* How to make sure the game always ends in a Timeframe
+- Each player has to make a move in 10 seconds
+- Each player gets 3000 seconds to play the entire game
+* */
+
 
 /* Open-Closed Principle = Open for extension (add more rules) and closed for modification (can't directly change internal code)
 * We are extracting logic from the core functioning of the class. So, core function becomes tighter & tighter It becomes extremely closed
-* for modifications but its earlier to pass right parameters to this functions and get them to do what you want */
+* for modifications, but it's earlier to pass right parameters to these functions and get them to do what you want */
 public class RuleEngine {
     public RuleEngine(){
         String key = TicTacToe.class.getName();

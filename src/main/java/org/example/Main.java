@@ -23,7 +23,7 @@ public class Main {
 
         while (!ruleEngine.getState(board).isOver()){
             Player computer = new Player("0"), human = new Player("X");
-            System.out.println("Make your move (Add row col for move)!");
+            System.out.println("Make your move (Add row col for move) Human is 'X' !");
             System.out.println(board);
             row = scanner.nextInt();
             col = scanner.nextInt();
