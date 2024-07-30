@@ -1,7 +1,7 @@
 package org.example.gamestate;
 
 /* Builder Design Pattern
- *  Builder class help us build objects of the class it is building for
+ * Builder class help us build objects of the class it is building for
  * */
 public class GameInfoBuilder {
     private boolean isOver; //isOver and winner are member variables of GameState Class

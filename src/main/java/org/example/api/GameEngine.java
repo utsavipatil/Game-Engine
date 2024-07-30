@@ -6,8 +6,9 @@
 
 package org.example.api;
 
-import org.example.*;
-import org.example.gamestate.*;
+import org.example.TicTacToe;
+import org.example.gamestate.Board;
+import org.example.gamestate.Move;
 
 public class GameEngine {
 

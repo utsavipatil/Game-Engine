@@ -4,7 +4,10 @@
 package org.example.api;
 
 import org.example.TicTacToe;
-import org.example.gamestate.*;
+import org.example.gamestate.Board;
+import org.example.gamestate.Cell;
+import org.example.gamestate.Move;
+import org.example.gamestate.Player;
 
 public class AIEngine {
 

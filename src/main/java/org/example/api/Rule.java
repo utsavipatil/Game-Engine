@@ -1,11 +1,11 @@
 package org.example.api;
 
-import org.example.TicTacToe;
+import org.example.gamestate.Board;
 import org.example.gamestate.GameState;
 
 import java.util.function.Function;
 
-class Rule<T extends TicTacToe> {
+public class Rule<T extends Board> {
     Function<T, GameState> condition;
 
     public Rule(Function<T, GameState> condition) {

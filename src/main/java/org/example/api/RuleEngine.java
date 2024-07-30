@@ -11,12 +11,8 @@ package org.example.api;
 import org.example.TicTacToe;
 import org.example.gamestate.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 /* How to make sure the game always ends in a Timeframe
 - Each player has to make a move in 10 seconds
 - Each player gets 3000 seconds to play the entire game
@@ -27,30 +23,14 @@ import java.util.function.Function;
 * We are extracting logic from the core functioning of the class. So, core function becomes tighter & tighter It becomes extremely closed
 * for modifications, but it's earlier to pass right parameters to these functions and get them to do what you want */
 public class RuleEngine {
-    public RuleEngine(){
-        String key = TicTacToe.class.getName();
-        ruleMap.put(key, new ArrayList<>()); //This makes Rule Engine much more extensible, Rules can also put in configuration files / db
-        ruleMap.get(key).add(new Rule<>(board-> outerTraversals((i,j) -> board.getSymbol(i,j))));
-        ruleMap.get(key).add(new Rule<>(board-> outerTraversals((i,j) -> board.getSymbol(j,i))));
-        ruleMap.get(key).add(new Rule<>(board-> traverse(i -> board.getSymbol(i,i))));
-        ruleMap.get(key).add(new Rule<>(board-> traverse(i-> board.getSymbol(i,2-i))));
-        ruleMap.get(key).add(new Rule<>(board-> {
-            int countOfFilledCells = 0;
-            for(int i=0; i<3; i++){
-                for(int j=0; j<3; j++){
-                    if(board.getCell(i, j) != null){
-                        countOfFilledCells++;
-                    }
-                }
-            }
-            if(countOfFilledCells == 9){
-                return new GameState(true , "-");
-            }
-            return new GameState(false, "-");
-        }));
-    }
 
-    Map<String, List<Rule<TicTacToe>>> ruleMap = new HashMap<>(); //String = Board class name(ex. "TicTacToe"), List<Rule> are all the rules applicable to that particular class
+    //String = Board class name(ex. "TicTacToe"), List<Rule> are all the rules applicable to that particular class
+    Map<String, RuleSet<TicTacToe>> ruleMap = new HashMap<>();
+
+    public RuleEngine(){
+        //This makes Rule Engine much more extensible, Rules can also put in configuration files / db
+        ruleMap.put(TicTacToe.class.getName(), TicTacToe.getRules());
+    }
 
     public GameInfo gameInfo(Board board){
         if(board instanceof TicTacToe){
@@ -109,34 +89,6 @@ public class RuleEngine {
         }
     }
 
-    private GameState outerTraversals(BiFunction<Integer,Integer,String> next){
-        //Iterator in Java is an Object used to traverse and access elements sequentially in a collection
 
-        GameState result = new GameState(false, "-");
-        for(int i=0; i<3; i++){ //All Rows
-            final int ii = i;
-            GameState traversal1 = traverse(j -> next.apply(ii,j));
-            if(traversal1.isOver()){
-                result = traversal1;
-                break;
-            }
-        }
-        return result;
-    }
-
-    private static GameState traverse(Function<Integer, String> traversal){
-        GameState result = new GameState(false, "-");
-        boolean possibleStreak = true;
-        for(int j=0; j<3; j++){
-            if(traversal.apply(j) == null || !traversal.apply(0).equals(traversal.apply(j))){
-                possibleStreak = false;
-                break;
-            }
-        }
-        if(possibleStreak){
-            result = new GameState(true, traversal.apply(0));
-        }
-        return result;
-    }
 }
 
