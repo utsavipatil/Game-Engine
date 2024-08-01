@@ -2,7 +2,8 @@ package org.example;
 
 import org.example.api.Rule;
 import org.example.api.RuleSet;
-import org.example.gamestate.Board;
+import org.example.boards.Board;
+import org.example.boards.CellBoard;
 import org.example.gamestate.Cell;
 import org.example.gamestate.GameState;
 import org.example.gamestate.Move;
@@ -13,16 +14,16 @@ import java.util.function.Function;
 /*
 * Prototype Pattern is used when the type of objects to create is determined by a prototypical instance, which is cloned to produce new objects.
 * */
-public class TicTacToe implements Board {
+public class TicTacToe implements CellBoard {
     String cells[][] = new String[3][3];
 
     public static RuleSet<TicTacToe> getRules(){
         RuleSet rules = new RuleSet();
-        rules.add(new Rule<TicTacToe>(board-> outerTraversals((i, j) -> board.getSymbol(i,j))));
-        rules.add(new Rule<TicTacToe>(board-> outerTraversals((i,j) -> board.getSymbol(j,i))));
-        rules.add(new Rule<TicTacToe>(board-> traverse(i -> board.getSymbol(i,i))));
-        rules.add(new Rule<TicTacToe>(board-> traverse(i-> board.getSymbol(i,2-i))));
-        rules.add(new Rule<TicTacToe>(board-> {
+        rules.add(new Rule(board-> outerTraversals((i, j) -> board.getSymbol(i,j))));
+        rules.add(new Rule(board-> outerTraversals((i,j) -> board.getSymbol(j,i))));
+        rules.add(new Rule(board-> traverse(i -> board.getSymbol(i,i))));
+        rules.add(new Rule(board-> traverse(i-> board.getSymbol(i,2-i))));
+        rules.add(new Rule(board-> {
             int countOfFilledCells = 0;
             for(int i=0; i<3; i++){
                 for(int j=0; j<3; j++){

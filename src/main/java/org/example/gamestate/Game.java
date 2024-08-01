@@ -1,5 +1,7 @@
 package org.example.gamestate;
 
+import org.example.boards.Board;
+
 public abstract class Game {
     private GameConfig gameConfig;
     private Board board;

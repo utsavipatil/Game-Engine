@@ -7,7 +7,7 @@
 package org.example.api;
 
 import org.example.TicTacToe;
-import org.example.gamestate.Board;
+import org.example.boards.Board;
 import org.example.gamestate.Move;
 
 public class GameEngine {

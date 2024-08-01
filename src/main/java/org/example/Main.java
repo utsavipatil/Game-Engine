@@ -3,13 +3,12 @@ package org.example;
 import org.example.api.AIEngine;
 import org.example.api.GameEngine;
 import org.example.api.RuleEngine;
-import org.example.gamestate.Board;
+import org.example.boards.Board;
 import org.example.gamestate.Cell;
 import org.example.gamestate.Move;
 import org.example.gamestate.Player;
 
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) throws IllegalAccessException {
         GameEngine gameEngine = new GameEngine();
